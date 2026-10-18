@@ -1,6 +1,5 @@
 import streamlit as st
 import time
-import streamlit.components.v1 as components
 
 st.set_page_config(page_title="NEURO-AURA: Space Suite", page_icon="🚀", layout="wide")
 
@@ -8,7 +7,7 @@ st.markdown("""
     <style>
     .stApp { background: radial-gradient(circle at center, #0B1021 0%, #03050C 100%); color: #E2E8F0; }
     .metric-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.4); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
-    .stButton>button { background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%); color: white; font-weight: bold; border-radius: 8px; padding: 12px 24px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5); }
+    .stButton>button { background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%); color: white; font-weight: bold; border-radius: 8px; padding: 12px 24px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5); width: 100%; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -16,108 +15,36 @@ st.title("🌌 NEURO-AURA: 3D Interactive Space & Mission Suite")
 st.markdown("### *NASA Space Apps Challenge - Astronot Eğitim & Simülasyon Sistemi*")
 
 sim_mode = st.sidebar.selectbox("Simülasyon Modu Seçin", [
-    "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)",
-    "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü",
-    "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör",
-    "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)",
-    "☄️ 3D Uzay Çöpü & Radar Kaçınma Simülatörü",
-    "🛰️ Canlı Uzay Verileri & Sesli AI Asistanı"
+    "🪐 Güneş Sistemi & Gezegenler",
+    "🚀 Roket Fırlatma Simülatörü",
+    "🌐 Canlı Kokpit & EKG Monitör",
+    "🏅 NASA Astronot Eğitim & Rozet Merkezi",
+    "☄️ Uzay Çöpü & Radar Takibi",
+    "🛰️ Sistem Durumu & AI Asistanı"
 ])
 
-if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)":
-    st.subheader("☀️ Güneş Sistemi, 8 Gezegen ve Uydular 3D Geçidi")
-    speed_factor = st.slider("Simülasyon Hızı", 1, 30, 5)
-    
-    sol_html = """
-    <div style='width:100%; height:550px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'>
-        <div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>☀️ 3D GÜNEŞ SİSTEMİ & UYDULAR</div>
-        <canvas id='scs' style='width:100%; height:100%; display:block;'></canvas>
-    </div>
-    <script>
-        const canvas = document.getElementById('scs');
-        const ctx = canvas.getContext('2d');
-        function resize() { canvas.width = canvas.parentElement.clientWidth; canvas.height = 550; }
-        resize(); window.onresize = resize;
-        let stars = [];
-        for(let i=0; i<900; i++) { stars.push({ x: (Math.random()-0.5)*canvas.width, y: (Math.random()-0.5)*canvas.height, z: Math.random()*canvas.width }); }
-        let bodies = [
-            { x: -380, y: 0, r: 50, name: '☀️ Güneş', z: 650, c1: '#ffcc00', c2: '#ff3300', ring: false },
-            { x: -300, y: -45, r: 10, name: '☿ Merkür', z: 600, c1: '#b0b0b0', c2: '#505050', ring: false },
-            { x: -220, y: 55, r: 16, name: '♀ Venüs', z: 560, c1: '#e3bb76', c2: '#8c6724', ring: false },
-            { x: -140, y: -25, r: 19, name: '🜨 Dünya (+Ay)', z: 520, c1: '#38bdf8', c2: '#1d4ed8', ring: false },
-            { x: -60, y: 65, r: 14, name: '♂ Mars (+Phobos)', z: 480, c1: '#ff7b54', c2: '#933215', ring: false },
-            { x: 30, y: -55, r: 35, name: '♃ Jüpiter (+Europa)', z: 430, c1: '#e0ae6f', c2: '#8b5a2b', ring: false },
-            { x: 120, y: 45, r: 30, name: '♄ Saturn (+Titan & Halka)', z: 380, c1: '#fcd34d', c2: '#b45309', ring: true },
-            { x: 200, y: -35, r: 23, name: '♅ Uranüs', z: 330, c1: '#67e8f9', c2: '#0e7490', ring: false },
-            { x: 280, y: 45, r: 22, name: '♆ Neptün', z: 290, c1: '#3b82f6', c2: '#1e3a8a', ring: false },
-            { x: 350, y: -25, r: 8, name: '♇ Plüton', z: 250, c1: '#d1d5db', c2: '#4b5563', ring: false }
-        ];
-        function draw() {
-            ctx.fillStyle = 'rgba(3, 5, 12, 0.45)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            let cx = canvas.width / 2, cy = canvas.height / 2;
-            for(let i=0; i<stars.length; i++) {
-                let s = stars[i]; s.Z -= 2.5;
-                if(s.Z <= 0) { s.Z = canvas.width; s.X = (Math.random()-0.5)*canvas.width; s.Y = (Math.random()-0.5)*canvas.height; }
-                let k = 100.0 / s.Z, px = s.X * k + cx, py = s.Y * k + cy;
-                if(px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
-                    ctx.fillStyle = '#fff'; ctx.fillRect(px, py, 1.8, 1.8);
-                }
-            }
-            for(let j=0; j<bodies.length; j++) {
-                let b = bodies[j]; b.z -= 1.2;
-                if(b.z <= 20) b.z = 950;
-                let bk = 160.0 / b.z, bpx = b.x * bk + cx, bpy = b.y * bk + cy, br = b.r * bk;
-                if(br < 0) continue;
-                if(b.ring) {
-                    ctx.save(); ctx.beginPath();
-                    ctx.ellipse(bpx, bpy, br * 2.2, br * 0.7, Math.PI / 6, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(245, 158, 11, 0.8)'; ctx.lineWidth = br * 0.28; ctx.stroke();
-                    ctx.restore();
-                }
-                let grad = ctx.createRadialGradient(bpx - br*0.3, bpy - br*0.3, br*0.1, bpx, bpy, br);
-                grad.addColorStop(0, b.c1); grad.addColorStop(1, b.c2);
-                ctx.beginPath(); ctx.arc(bpx, bpy, br, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill();
-                ctx.fillStyle = '#f1f5f9'; ctx.font = 'bold 12px monospace';
-                ctx.fillText(b.name, bpx + br + 10, bpy + 4);
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
-    </script>
-    """
-    components.html(sol_html, height=570)
+if sim_mode == "🪐 Güneş Sistemi & Gezegenler":
+    st.subheader("☀️ Güneş Sistemi ve 8 Gezegen Modülü")
+    speed = st.slider("Simülasyon Hızı", 1, 30, 5)
+    st.info("🪐 Güneş, 8 ana gezegen ve uydularının yörünge simülasyon motoru aktif.")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.markdown('<div class="metric-card"><h4>Merkür & Venüs</h4><p>İç Yörünge</p></div>', unsafe_allow_html=True)
+    col2.markdown('<div class="metric-card"><h4>Dünya & Ay</h4><p>Yaşam Kuşağı</p></div>', unsafe_allow_html=True)
+    col3.markdown('<div class="metric-card"><h4>Mars & Jüpiter</h4><p>Dış Yörünge</p></div>', unsafe_allow_html=True)
+    col4.markdown('<div class="metric-card"><h4>Satürn & Diğerleri</h4><p>Derin Uzay</p></div>', unsafe_allow_html=True)
 
-elif sim_mode == "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü":
-    st.subheader("🚀 Profesyonel 3D Roket Fırlatma & Atmosfer Tırmanış Simülatörü")
+elif sim_mode == "🚀 Roket Fırlatma Simülatörü":
+    st.subheader("🚀 Profesyonel Roket Fırlatma & Atmosfer Tırmanışı")
     throttle = st.slider("Motor İtki Gücü (Throttle %)", 0, 100, 90)
-    
-    pro_rocket_html = """
-    <div style='width:100%; height:520px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'>
-        <div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>🚀 PRO ROKET FIRLATMA SİSTEMİ</div>
-        <canvas id='proRocket' style='width:100%; height:100%; display:block;'></canvas>
-    </div>
-    <script>
-        const prCanvas = document.getElementById('proRocket');
-        const prCtx = prCanvas.getContext('2d');
-        function prResize() { prCanvas.width = prCanvas.parentElement.clientWidth; prCanvas.height = 520; }
-        prResize(); window.onresize = prResize;
-        let rY = 360; let pStars = [];
-        for(let i=0; i<300; i++) { pStars.push({ x: Math.random()*prCanvas.width, y: Math.random()*prCanvas.height, s: Math.random()*2 }); }
-        function prDraw() {
-            prCtx.fillStyle = 'rgba(3, 5, 12, 0.4)'; prCtx.fillRect(0, 0, prCanvas.width, prCanvas.height);
-            let cx = prCanvas.width / 2; prCtx.fillStyle = '#ffffff';
-            pStars.forEach(st => {
-                prCtx.fillRect(st.x, st.y, st.s, st.s);
-                if(rY < 250) st.y += 2;
-                if(st.y > prCanvas.height) st.y = 0;
-            });
-            prCtx.fillStyle = '#1e293b'; prCtx.fillRect(cx - 70, 440, 140, 25);
-            prCtx.fillStyle = '#334155'; prCtx.fillRect(cx - 40, 410, 80, 30);
-            prCtx.fillRect(cx - 65, 320, 12, 120); prCtx.fillRect(cx + 53, 320, 12, 120);
-            let rGrad = prCtx.createLinearGradient(cx - 18, 0, cx + 18, 0);
-            rGrad.addColorStop(0, '#64748b'); rGrad.addColorStop(0.3, '#f8fafc'); rGrad.addColorStop(0.7, '#cbd5e1'); rGrad.addColorStop(1, '#475569');
-            prCtx.fillStyle = rGrad; prCtx.beginPath();
-            prCtx.moveTo(cx, rY - 70); prCtx.lineTo(cx - 18, rY - 30);
-            prCtx.lineTo(cx - 18, rY + 80); prCtx.lineTo(cx + 18, rY + 80);
-            prCtx.lineTo(cx + 18, rY - 30); prCtx.closePath(); prCtx.fill();
+    st.markdown(f"Mevcut İtki Gücü: **%{throttle}** - Ateşlemeye hazır.")
+    if st.button("🔥 Tam Güç Ateşleme Yap"):
+        with st.spinner("Roket ateşleniyor ve atmosfer katmanları geçiliyor..."):
+            time.sleep(1.5)
+        st.success("🚀 Roket başarıyla yörüngeye yerleşti! İrtifa: 320 km.")
+        st.balloons()
+
+elif sim_mode == "🌐 Canlı Kokpit & EKG Monitör":
+    st.subheader("📊 Biyometrik Canlı Akış ve Kokpit Monitörü")
+    c1, c2, c3 = st.columns(3)
+    c1.markdown('<div class="metric-card"><h3>❤️ Kalp Ritmi</h3><h2>74 bpm</h2></div>', unsafe_allow_html=True)
+    c2.markdown('<div class="metric-card"><h3>🧪 Kabin Oksij
