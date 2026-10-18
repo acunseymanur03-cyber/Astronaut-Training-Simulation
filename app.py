@@ -19,7 +19,8 @@ sim_mode = st.sidebar.selectbox("Simülasyon Modu Seçin", [
     "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)",
     "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü",
     "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör",
-    "☄️ 3D Uzay Çöpü & Radar Kaçınma Simülatörü"
+    "☄️ 3D Uzay Çöpü & Radar Kaçınma Simülatörü",
+    "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)"
 ])
 
 if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)":
@@ -58,3 +59,68 @@ else:
     if st.button("🚨 Otonom Kaçış Manevrasını Başlat"):
         st.balloons()
         st.success("🎉 Başarılı! RDP itki roketleri devreye girerek uzay çöplerinden kaçındı.")
+elif sim_mode == "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)":
+    st.subheader("🏅 NASA Astronot Uzmanlık Eğitimi & Rozet Kazanma Simülatörü")
+    st.write("Görev simülasyonlarını başarıyla tamamlayarak resmi NASA astronot uzmanlık rozetlerini kazanın!")
+
+    # Rozet Durumu Saklama (Session State)
+    if "badges" not in st.session_state:
+        st.session_state.badges = {"zero_g": False, "eva": False, "nav": False}
+
+    # 3D Eğitim Kapsülü Görsel Simülasyonu
+    train_html = "<div style='width:100%; height:380px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'><div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>🧑‍🚀 NASA EĞİTİM KAPSÜLÜ | Canlı Yerçekimsizlik Testi</div><canvas id='tcan' style='width:100%; height:100%; display:block;'></canvas></div><script>const tcan = document.getElementById('tcan'); const tctx = tcan.getContext('2d'); function tres() { tcan.width = tcan.parentElement.clientWidth; tcan.height = 380; } tres(); window.onresize = tres; let aY = 190; let dir = 1; function drawTrain() { tctx.fillStyle = 'rgba(3, 5, 12, 0.3)'; tctx.fillRect(0, 0, tcan.width, tcan.height); let cx = tcan.width / 2; aY += 0.8 * dir; if (aY > 230 || aY < 150) dir *= -1; tctx.fillStyle = '#38bdf8'; tctx.shadowBlur = 15; tctx.shadowColor = '#38bdf8'; tctx.beginPath(); tctx.arc(cx, aY - 30, 18, 0, Math.PI * 2); tctx.fill(); tctx.fillStyle = '#f8fafc'; tctx.beginPath(); tctx.roundRect(cx - 15, aY - 8, 30, 45, 8); tctx.fill(); tctx.fillStyle = '#ef4444'; tctx.fillRect(cx - 22, aY, 7, 25); tctx.fillRect(cx + 15, aY, 7, 25); tctx.strokeStyle = '#00f0ff'; tctx.lineWidth = 2; [40, 80, 120].forEach(r => { tctx.beginPath(); tctx.arc(cx, aY, r + Math.sin(Date.now() * 0.003) * 5, 0, Math.PI * 2); tctx.stroke(); }); requestAnimationFrame(drawTrain); } drawTrain();</script>"
+    components.html(train_html, height=400)
+
+    st.markdown("### 🎯 NASA Eğitim Görevleri")
+    
+    col_e1, col_e2, col_e3 = st.columns(3)
+    
+    with col_e1:
+        st.markdown("<div class='metric-card'><h4>🌍 Sıfır Yerçekimi (Zero-G) Uyum</h4><p>Uzayda yön ve denge kontrolü testi.</p></div>", unsafe_allow_html=True)
+        if st.button("🎓 Zero-G Testini Başlat"):
+            with st.spinner("Sıfır yerçekimi odası simüle ediliyor..."):
+                time.sleep(1.5)
+            st.session_state.badges["zero_g"] = True
+            st.success("🎉 Tebrikler! Zero-G sertifikasını kazandınız!")
+            st.balloons()
+
+    with col_e2:
+        st.markdown("<div class='metric-card'><h4>🛰️ ISS Uzay Yürüyüşü (EVA)</h4><p>Uluslararası Uzay İstasyonu dış tamiri.</p></div>", unsafe_allow_html=True)
+        if st.button("🔧 EVA Görevini Yap"):
+            with st.spinner("Uzay elbisesi basınçlandırılıyor..."):
+                time.sleep(1.5)
+            st.session_state.badges["eva"] = True
+            st.success("🎉 Tebrikler! EVA Uzmanlık sertifikasını kazandınız!")
+            st.balloons()
+
+    with col_e3:
+        st.markdown("<div class='metric-card'><h4>🪐 Derin Uzay Navigasyonu</h4><p>Yıldız sistemleri üzerinden rotalama.</p></div>", unsafe_allow_html=True)
+        if st.button("🧭 Navigasyonu Tamamla"):
+            with st.spinner("Yıldız haritaları işleniyor..."):
+                time.sleep(1.5)
+            st.session_state.badges["nav"] = True
+            st.success("🎉 Tebrikler! Kaptan Navigatör sertifikasını kazandınız!")
+            st.balloons()
+
+    st.markdown("---")
+    st.markdown("### 🏅 Kazanılan Resmi NASA Uzmanlık Rozetleriniz")
+    
+    b_col1, b_col2, b_col3 = st.columns(3)
+    
+    with b_col1:
+        if st.session_state.badges["zero_g"]:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🛸</h1><b>NASA Zero-G Master</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA Zero-G Master</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+
+    with b_col2:
+        if st.session_state.badges["eva"]:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>👨‍🚀</h1><b>NASA EVA Specialist</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA EVA Specialist</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+
+    with b_col3:
+        if st.session_state.badges["nav"]:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🚀</h1><b>Deep Space Commander</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>Deep Space Commander</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
