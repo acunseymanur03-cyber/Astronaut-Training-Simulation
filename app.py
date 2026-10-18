@@ -16,71 +16,107 @@ st.title("🌌 NEURO-AURA: Interstellar 3D Flight & Training Engine")
 st.markdown("### *NASA Space Apps Challenge - Advanced Simulation Suite*")
 
 sim_mode = st.sidebar.selectbox("Eğitim Modu Seçin", [
-    "🚀 3D Uzayda Seyahat",
+    "🚀 3D Uzay, Yıldızlar ve Gezegenler",
     "🌐 Canlı Kokpit Paneli",
     "👨‍🚀 EVA Uzay Yürüyüşü",
     "☄️ Uzay Çöpü Kaçınma"
 ])
 
-if sim_mode == "🚀 3D Uzayda Seyahat":
-    st.subheader("🪐 Derin Uzay Navigasyon ve Yıldız Tarlası Simülatörü")
+if sim_mode == "🚀 3D Uzay, Yıldızlar ve Gezegenler":
+    st.subheader("🪐 Derin Uzay, Yıldız Tarlası ve Gezegen Geçiş Simülatörü")
     
-    # Hareketli yıldız simülasyonu HTML kodu
-    star_html = """
-    <div style="width:100%; height:480px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:1px solid #38bdf8;">
-        <div style="position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.75); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;">
-            🚀 WARP HIZI: AKTİF | Yıldızlar Arası Seyahat
+    # Yıldızlar ve Gezegenleri birlikte gösteren gelişmiş HTML/JS simülasyonu
+    planet_space_html = """
+    <div style="width:100%; height:500px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:1px solid #38bdf8;">
+        <div style="position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.8); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;">
+            🪐 GEZEGEN GEÇİŞİ: AKTİF | Yıldızlar ve Gezegenler
         </div>
-        <canvas id="sc"></canvas>
+        <canvas id="pc"></canvas>
     </div>
     <script>
-        const c = document.getElementById('sc');
-        const x = c.getContext('2d');
+        const canvas = document.getElementById('pc');
+        const ctx = canvas.getContext('2d');
         function resize() {
-            c.width = c.parentElement.clientWidth;
-            c.height = 480;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 500;
         }
         resize();
         window.onresize = resize;
         
-        let num = 600;
-        let arr = [];
-        for(let i=0; i<num; i++) {
-            arr.push({
-                X: (Math.random() - 0.5) * c.width,
-                Y: (Math.random() - 0.5) * c.height,
-                Z: Math.random() * c.width
+        let stars = [];
+        for(let i=0; i<500; i++) {
+            stars.push({
+                x: (Math.random() - 0.5) * canvas.width,
+                y: (Math.random() - 0.5) * canvas.height,
+                z: Math.random() * canvas.width
             });
         }
-        function loop() {
-            x.fillStyle = "rgba(3, 5, 12, 0.3)";
-            x.fillRect(0, 0, c.width, c.height);
-            let cx = c.width / 2;
-            let cy = c.height / 2;
-            for(let i=0; i<num; i++) {
-                let s = arr[i];
-                s.Z -= 3;
-                if(s.Z <= 0) { s.Z = c.width; s.X = (Math.random() - 0.5) * c.width; s.Y = (Math.random() - 0.5) * c.height; }
+        
+        // Gezegenler
+        let planets = [
+            { x: -150, y: -80, radius: 45, color: '#ff4500', name: 'Mars II', z: 400 },
+            { x: 200, y: 100, radius: 70, color: '#38bdf8', name: 'Gas Giant Alpha', z: 600 },
+            { x: -220, y: 150, radius: 35, color: '#eab308', name: 'Exoplanet Kepler', z: 800 }
+        ];
+
+        function draw() {
+            ctx.fillStyle = "rgba(3, 5, 12, 0.35)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            let cx = canvas.width / 2;
+            let cy = canvas.height / 2;
+            
+            // Yıldızları çiz
+            for(let i=0; i<stars.length; i++) {
+                let s = stars[i];
+                s.Z -= 2.5;
+                if(s.Z <= 0) { s.Z = canvas.width; s.X = (Math.random() - 0.5) * canvas.width; s.Y = (Math.random() - 0.5) * canvas.height; }
                 let k = 100.0 / s.Z;
                 let px = s.X * k + cx;
                 let py = s.Y * k + cy;
-                if(px >= 0 && px <= c.width && py >= 0 && py <= c.height) {
-                    let sz = (1 - s.Z / c.width) * 2.5;
-                    x.fillStyle = "#38bdf8";
-                    x.beginPath();
-                    x.arc(px, py, sz < 0 ? 0 : sz, 0, Math.PI * 2);
-                    x.fill();
+                if(px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    let sz = (1 - s.Z / canvas.width) * 2;
+                    ctx.fillStyle = "#ffffff";
+                    ctx.beginPath();
+                    ctx.arc(px, py, sz < 0 ? 0 : sz, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
-            requestAnimationFrame(loop);
+
+            // Gezegenleri çiz ve hareket ettir
+            for(let j=0; j<planets.length; j++) {
+                let p = planets[j];
+                p.z -= 1.2;
+                if(p.z <= 50) { p.z = 900; }
+                
+                let pk = 150.0 / p.z;
+                let ppx = p.x * pk + cx;
+                let ppy = p.y * pk + cy;
+                let pradius = p.radius * pk;
+                
+                ctx.beginPath();
+                ctx.arc(ppx, ppy, pradius < 0 ? 0 : pradius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset shadow
+                
+                // Gezegen İsmi
+                ctx.fillStyle = "#e2e8f0";
+                ctx.font = "12px monospace";
+                ctx.fillText(p.name, ppx + pradius + 5, ppy);
+            }
+
+            requestAnimationFrame(draw);
         }
-        loop();
+        draw();
     </script>
     """
-    components.html(star_html, height=500)
+    components.html(planet_space_html, height=520)
     
-    speed = st.slider("Warp Hızı", 1, 10, 5)
-    st.info(f"Mevcut İtki Seviyesi: {speed} Mach")
+    speed = st.slider("Warp Motor Hızı", 1, 10, 5)
+    target = st.selectbox("Yörünge Hedefi", ["Mars II Kolonisi", "Gas Giant Alpha", "Exoplanet Kepler Sistemi"])
+    st.info(f"📍 Rota: **{target}** | Hız: **{speed} Mach**")
 
 elif sim_mode == "🌐 Canlı Kokpit Paneli":
     st.subheader("📊 Astronot Sağlık & Yaşam Destek Paneli")
