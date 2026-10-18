@@ -48,56 +48,96 @@ elif sim_mode == "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör":
     c3.markdown('<div class="metric-card"><h3>🧠 Nöro-Stres</h3><h2>%10 (Stabil)</h2></div>', unsafe_allow_html=True)
 
 elif sim_mode == "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)":
-    st.subheader("🏅 NASA Astronot Uzmanlık Eğitimi & Rozet Kazanma Simülatörü")
-    st.write("Görev simülasyonlarını başarıyla tamamlayarak resmi NASA astronot uzmanlık rozetlerini kazanın!")
+    st.subheader("🏅 NASA Astronot Uzmanlık Eğitimi & İnteraktif Simülasyon Oyunları")
+    st.write("Rozetleri kazanmak için aşağıdaki mini görev simülasyon oyunlarını başarıyla tamamlayın!")
+
     if "badges" not in st.session_state:
         st.session_state.badges = {"zero_g": False, "eva": False, "nav": False}
-    train_html = "<div style='width:100%; height:380px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'><div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>🧑‍🚀 NASA EĞİTİM Kapsülü | Yerçekimsizlik Testi</div><canvas id='tcan' style='width:100%; height:100%; display:block;'></canvas></div><script>const tcan = document.getElementById('tcan'); const tctx = tcan.getContext('2d'); function tres() { tcan.width = tcan.parentElement.clientWidth; tcan.height = 380; } tres(); window.onresize = tres; let aY = 190; let dir = 1; function drawTrain() { tctx.fillStyle = 'rgba(3, 5, 12, 0.3)'; tctx.fillRect(0, 0, tcan.width, tcan.height); let cx = tcan.width / 2; aY += 0.8 * dir; if (aY > 230 || aY < 150) dir *= -1; tctx.fillStyle = '#38bdf8'; tctx.shadowBlur = 15; tctx.shadowColor = '#38bdf8'; tctx.beginPath(); tctx.arc(cx, aY - 30, 18, 0, Math.PI * 2); tctx.fill(); tctx.fillStyle = '#f8fafc'; tctx.beginPath(); tctx.roundRect(cx - 15, aY - 8, 30, 45, 8); tctx.fill(); tctx.fillStyle = '#ef4444'; tctx.fillRect(cx - 22, aY, 7, 25); tctx.fillRect(cx + 15, aY, 7, 25); tctx.strokeStyle = '#00f0ff'; tctx.lineWidth = 2; [40, 80, 120].forEach(r => { tctx.beginPath(); tctx.arc(cx, aY, r + Math.sin(Date.now() * 0.003) * 5, 0, Math.PI * 2); tctx.stroke(); }); requestAnimationFrame(drawTrain); } drawTrain();</script>"
-    components.html(train_html, height=400)
-    st.markdown("### 🎯 NASA Eğitim Görevleri")
-    col_e1, col_e2, col_e3 = st.columns(3)
-    with col_e1:
-        st.markdown("<div class='metric-card'><h4>🌍 Sıfır Yerçekimi (Zero-G) Uyum</h4><p>Uzayda yön ve denge kontrolü testi.</p></div>", unsafe_allow_html=True)
-        if st.button("🎓 Zero-G Testini Başlat"):
-            with st.spinner("Sıfır yerçekimi odası simüle ediliyor..."):
-                time.sleep(1.5)
-            st.session_state.badges["zero_g"] = True
-            st.success("🎉 Tebrikler! Zero-G sertifikasını kazandınız!")
-            st.balloons()
-    with col_e2:
-        st.markdown("<div class='metric-card'><h4>🛰️ ISS Uzay Yürüyüşü (EVA)</h4><p>Uluslararası Uzay İstasyonu dış tamiri.</p></div>", unsafe_allow_html=True)
-        if st.button("🔧 EVA Görevini Yap"):
-            with st.spinner("Uzay elbisesi basınçlandırılıyor..."):
-                time.sleep(1.5)
-            st.session_state.badges["eva"] = True
-            st.success("🎉 Tebrikler! EVA Uzmanlık sertifikasını kazandınız!")
-            st.balloons()
-    with col_e3:
-        st.markdown("<div class='metric-card'><h4>🪐 Derin Uzay Navigasyonu</h4><p>Yıldız sistemleri üzerinden rotalama.</p></div>", unsafe_allow_html=True)
-        if st.button("🧭 Navigasyonu Tamamla"):
-            with st.spinner("Yıldız haritaları işleniyor..."):
-                time.sleep(1.5)
-            st.session_state.badges["nav"] = True
-            st.success("🎉 Tebrikler! Kaptan Navigatör sertifikasını kazandınız!")
-            st.balloons()
+    if "zg_score" not in st.session_state:
+        st.session_state.zg_score = 0
+    if "eva_score" not in st.session_state:
+        st.session_state.eva_score = 0
+    if "nav_score" not in st.session_state:
+        st.session_state.nav_score = 0
+
     st.markdown("---")
-    st.markdown("### 🏅 Kazanılan Resmi NASA Uzmanlık Rozetleriniz")
+    
+    # GÖREV 1: ZERO-G
+    col_zg1, col_zg2 = st.columns([2, 1])
+    with col_zg1:
+        st.markdown("#### 🛸 Görev 1: Sıfır Yerçekimi (Zero-G) Denge Simülasyonu")
+        zg_game_html = "<div style='width:100%; height:240px; background:#000; border-radius:12px; position:relative; border:2px solid #38bdf8;'><canvas id='zgCan' style='width:100%; height:100%; display:block;'></canvas></div><script>const zgC = document.getElementById('zgCan'); const zgCtx = zgC.getContext('2d'); zgC.width = zgC.parentElement.clientWidth; zgC.height = 240; let zgY = 120; let zgSpeed = 1.5; function drawZG() { zgCtx.fillStyle = 'rgba(3,5,12,0.3)'; zgCtx.fillRect(0,0,zgC.width,zgC.height); let cx = zgC.width/2; zgY += zgSpeed; if(zgY > 200 || zgY < 40) zgSpeed *= -1; zgCtx.fillStyle = '#38bdf8'; zgCtx.beginPath(); zgCtx.arc(cx, zgY, 16, 0, Math.PI*2); zgCtx.fill(); zgCtx.strokeStyle = '#22c55e'; zgCtx.lineWidth = 3; zgCtx.strokeRect(cx - 35, 90, 70, 60); requestAnimationFrame(drawZG); } drawZG();</script>"
+        components.html(zg_game_html, height=260)
+    with col_zg2:
+        st.write("**Oyun:** Astronotu yeşil hedefe dengeleyin.")
+        st.progress(st.session_state.zg_score / 100)
+        st.caption(f"Skor: %{st.session_state.zg_score}")
+        if st.button("⚖️ Dengele (+34 Puan)", key="btn_zg"):
+            st.session_state.zg_score = min(100, st.session_state.zg_score + 34)
+            if st.session_state.zg_score >= 100 and not st.session_state.badges["zero_g"]:
+                st.session_state.badges["zero_g"] = True
+                st.success("🎉 Zero-G Rozeti Kazanıldı!")
+                st.balloons()
+
+    st.markdown("---")
+
+    # GÖREV 2: EVA
+    col_ev1, col_ev2 = st.columns([2, 1])
+    with col_ev1:
+        st.markdown("#### 🛰️ Görev 2: ISS Uzay Yürüyüşü (EVA) Panel Tamiri")
+        eva_game_html = "<div style='width:100%; height:240px; background:#000; border-radius:12px; position:relative; border:2px solid #38bdf8;'><canvas id='evaCan' style='width:100%; height:100%; display:block;'></canvas></div><script>const evaC = document.getElementById('evaCan'); const evaCtx = evaC.getContext('2d'); evaC.width = evaC.parentElement.clientWidth; evaC.height = 240; let eX = 20; function drawEVA() { evaCtx.fillStyle = 'rgba(3,5,12,0.3)'; evaCtx.fillRect(0,0,evaC.width,evaC.height); evaCtx.fillStyle = '#ef4444'; evaCtx.fillRect(eX, 100, 40, 40); evaCtx.fillStyle = '#22c55e'; evaCtx.fillRect(evaC.width - 80, 90, 60, 60); requestAnimationFrame(drawEVA); } drawEVA();</script>"
+        components.html(eva_game_html, height=260)
+    with col_ev2:
+        st.write("**Oyun:** Arızalı paneli tamir edip enerji akışını bağlayın.")
+        st.progress(st.session_state.eva_score / 100)
+        st.caption(f"Tamir: %{st.session_state.eva_score}")
+        if st.button("🔧 Kabloları Bağla (+50 Puan)", key="btn_eva"):
+            st.session_state.eva_score = min(100, st.session_state.eva_score + 50)
+            if st.session_state.eva_score >= 100 and not st.session_state.badges["eva"]:
+                st.session_state.badges["eva"] = True
+                st.success("🎉 EVA Uzmanlık Rozeti Kazanıldı!")
+                st.balloons()
+
+    st.markdown("---")
+
+    # GÖREV 3: NAVİGASYON
+    col_nv1, col_nv2 = st.columns([2, 1])
+    with col_nv1:
+        st.markdown("#### 🪐 Görev 3: Derin Uzay Rotası Çizme & Navigasyon")
+        nav_game_html = "<div style='width:100%; height:240px; background:#000; border-radius:12px; position:relative; border:2px solid #38bdf8;'><canvas id='navCan' style='width:100%; height:100%; display:block;'></canvas></div><script>const navC = document.getElementById('navCan'); const navCtx = navC.getContext('2d'); navC.width = navC.parentElement.clientWidth; navC.height = 240; let nA = 0; function drawNav() { navCtx.fillStyle = 'rgba(3,5,12,0.3)'; navCtx.fillRect(0,0,navC.width,navC.height); nA += 0.03; let cx = navC.width/2, cy = 120; navCtx.strokeStyle = '#38bdf8'; navCtx.lineWidth = 2; navCtx.beginPath(); navCtx.arc(cx, cy, 70, 0, Math.PI*2); navCtx.stroke(); navCtx.fillStyle = '#f59e0b'; navCtx.beginPath(); navCtx.arc(cx + Math.cos(nA)*70, cy + Math.sin(nA)*70, 10, 0, Math.PI*2); navCtx.fill(); requestAnimationFrame(drawNav); } drawNav();</script>"
+        components.html(nav_game_html, height=260)
+    with col_nv2:
+        st.write("**Oyun:** Yıldız haritası koordinatlarını kilitleyin.")
+        st.progress(st.session_state.nav_score / 100)
+        st.caption(f"Rota Uyum: %{st.session_state.nav_score}")
+        if st.button("🧭 Koordinatları Kilitle (+50 Puan)", key="btn_nav"):
+            st.session_state.nav_score = min(100, st.session_state.nav_score + 50)
+            if st.session_state.nav_score >= 100 and not st.session_state.badges["nav"]:
+                st.session_state.badges["nav"] = True
+                st.success("🎉 Deep Space Commander Rozeti Kazanıldı!")
+                st.balloons()
+
+    st.markdown("---")
+    st.markdown("### 🏅 Resmi NASA Uzmanlık Rozet Panonuz")
     b_col1, b_col2, b_col3 = st.columns(3)
+    
     with b_col1:
         if st.session_state.badges["zero_g"]:
             st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🛸</h1><b>NASA Zero-G Master</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA Zero-G Master</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA Zero-G Master</b><br><small style='color:#94a3b8;'>Test Bekliyor</small></div>", unsafe_allow_html=True)
+
     with b_col2:
         if st.session_state.badges["eva"]:
             st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>👨‍🚀</h1><b>NASA EVA Specialist</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA EVA Specialist</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA EVA Specialist</b><br><small style='color:#94a3b8;'>Test Bekliyor</small></div>", unsafe_allow_html=True)
+
     with b_col3:
         if st.session_state.badges["nav"]:
             st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🚀</h1><b>Deep Space Commander</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>Deep Space Commander</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>Deep Space Commander</b><br><small style='color:#94a3b8;'>Test Bekliyor</small></div>", unsafe_allow_html=True)
 
 else:
     st.subheader("☄️ 3D Uzay Çöpü Radar & Kaçınma Simülatörü")
