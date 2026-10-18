@@ -1,10 +1,10 @@
 import streamlit as st
 import time
-import random
+import streamlit.components.v1 as components
 
 # Sayfa Yapılandırması
 st.set_page_config(
-    page_title="Astronaut Training Simulation - 3D Neural Suite",
+    page_title="NEURO-AURA: 3D Space Flight & Training Simulator",
     page_icon="🚀",
     layout="wide"
 )
@@ -17,11 +17,11 @@ st.markdown("""
         color: #E2E8F0;
     }
     .metric-card {
-        background: rgba(15, 23, 42, 0.75);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        padding: 20px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        padding: 18px;
         border-radius: 12px;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
         text-align: center;
     }
     .stButton>button {
@@ -30,75 +30,103 @@ st.markdown("""
         font-weight: bold;
         border: none;
         border-radius: 8px;
-        padding: 10px 24px;
-        box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        padding: 12px 28px;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
     }
     .stButton>button:hover {
         background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
-        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8);
+        box-shadow: 0 0 30px rgba(56, 189, 248, 0.9);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Başlık ve 3D Hissiyatı Veren Görsel Banner
-st.title("🌌 NEURO-AURA: 3D Astronaut Cognitive Training Suite")
-st.markdown("### *NASA Space Apps Challenge - Advanced Zero-G & Stress Simulation Engine*")
+# Başlık
+st.title("🌌 NEURO-AURA: Interstellar 3D Flight & Training Engine")
+st.markdown("### *NASA Space Apps Challenge - Deep Space Exploration & Biometric Training Suite*")
 
 # Yan Menü
-st.sidebar.header("🕹️ Simülasyon Kontrol Paneli")
+st.sidebar.header("🕹️ Simülasyon Kontrol Merkezi")
 sim_mode = st.sidebar.selectbox(
-    "Mod Seçimi",
+    "Eğitim & Seyahat Modu Seçin",
     [
-        "🚀 3D Kokpit & Biyometrik Takip",
-        "⚖️ Yerçekimsiz Ortam (Zero-G) Denge Simülasyonu",
-        "🚨 Acil Durum & Kriz Yönetim Simülatörü"
+        "🚀 3D Uzayda Seyahat (Interstellar Warp)",
+        "🌐 Canlı Kokpit & Biyometrik Paneller",
+        "👨‍🚀 EVA Uzay Yürüyüşü & İtki Testi",
+        "☄️ Uzay Çöpü Kaçınma & Kriz Yönetimi"
     ]
 )
 
-if sim_mode == "🚀 3D Kokpit & Biyometrik Takip":
-    st.subheader("🌐 Canlı Uzay İstasyonu & Biyometrik Veri Akışı")
+if sim_mode == "🚀 3D Uzayda Seyahat (Interstellar Warp)":
+    st.subheader("🪐 3D Derin Uzay Navigasyon Simülatörü")
+    st.write("Aşağıdaki 3D simülatörde fareyi sürükleyerek kamerayı döndürebilir, uzay boşluğundaki yıldız tarlasında seyahat edebilirsin!")
     
-    # 3D Uzay Görseli Efekti
-    st.image(
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop",
-        caption="NASA Uzay İstasyonu Canlı Yörünge Görünümü",
-        use_container_width=True
-    )
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown('<div class="metric-card"><h3>❤️ Kalp Atış Hızı</h3><h2>74 bpm</h2><p style="color:#38bdf8;">Optimum Seviye</p></div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="metric-card"><h3>🧪 Kabin Oksijeni</h3><h2>99.4%</h2><p style="color:#4ade80;">Stabil Basınç</p></div>', unsafe_allow_html=True)
-    with col3:
-        st.markdown('<div class="metric-card"><h3>🧠 Bilişsel Yük</h3><h2>Düşük</h2><p style="color:#38bdf8;">Odak %98</p></div>', unsafe_allow_html=True)
+    # Three.js Tabanlı Canlı 3D Yıldız Tarlası & Seyahat Simülasyonu (HTML/JS)
+    threejs_code = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { margin: 0; overflow: hidden; background-color: #000; }
+            canvas { display: block; width: 100vw; height: 500px; }
+            #info {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                color: #00f0ff;
+                font-family: monospace;
+                font-size: 14px;
+                background: rgba(0,0,0,0.6);
+                padding: 8px 12px;
+                border-radius: 5px;
+                border: 1px solid #00f0ff;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="info">🚀 WARP HIZI: ACTIVE | Fare ile bakış açısını değiştirin</div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script>
+            let scene, camera, renderer, stars, starGeo;
+            let count = 4000;
 
-elif sim_mode == "⚖️ Yerçekimsiz Ortam (Zero-G) Denge Simülasyonu":
-    st.subheader("⚖️ Yerçekimsiz Ortamda Denge ve Oryantasyon Testi")
-    st.write("Uzay boşluğunda yön bulma yeteneğini test eden 3D simülasyon motorunu çalıştırın.")
-    
-    gravity_level = st.slider("Simüle Edilen Yerçekimi Katsayısı (G)", 0.0, 1.0, 0.05)
-    
-    if st.button("🔄 3D Denge Kalibrasyonunu Başlat"):
-        with st.spinner("Nöral ağlar ve jiroskopik sensörler kalibre ediliyor..."):
-            time.sleep(2.5)
-        st.success(f"✅ Kalibrasyon Başarılı! {gravity_level}G seviyesinde uzay yürüyüşü dengesi sağlandı.")
-        st.balloons()
+            function init() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(60, window.innerWidth / 500, 1, 1000);
+                camera.position.z = 1;
+                camera.rotation.x = Math.PI/2;
 
-else:
-    st.subheader("🚨 Acil Durum & Kriz Yönetim Simülatörü")
-    st.write("Senaryo: Güneş fırtınası kaynaklı radyoaktif dalgalanma ve ana panel arızası!")
-    
-    crisis_action = st.radio(
-        "Acil Durum Stratejisini Seçin:",
-        [
-            "Kalkanları aktifleştir ve acil sığınma bölmesine geç",
-            "Yapay zeka (Lidya) destekli otomatik onarım protokolünü çalıştır",
-            "Manuel oksijen regülasyonunu devreye sok"
-        ]
-    )
-    
-    if st.button("⚡ Krizi Yönet"):
-        with st.spinner("Kriz senaryosu simüle ediliyor..."):
-            time.sleep(2)
-        st.error("⚠️ Simülasyon Sonucu: Sinyal bozulması önlendi, rota güvenli bölgeye sabitlendi!")
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, 500);
+                document.body.appendChild(renderer.domElement);
+
+                starGeo = new THREE.BufferGeometry();
+                let positions = new Float32Array(count * 3);
+
+                for(let i=0; i<count*3; i+=3) {
+                    positions[i] = Math.random() * 600 - 300;
+                    positions[i+1] = Math.random() * 600 - 300;
+                    positions[i+2] = Math.random() * 600 - 300;
+                }
+
+                starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                let sprite = new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png');
+                let starMaterial = new THREE.PointsMaterial({
+                    color: 0x38bdf8,
+                    size: 0.8,
+                    transparent: true
+                });
+
+                stars = new THREE.Points(starGeo, starMaterial);
+                scene.add(stars);
+
+                window.addEventListener("resize", onWindowResize, false);
+                animate();
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / 500;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, 500);
+            }
+
