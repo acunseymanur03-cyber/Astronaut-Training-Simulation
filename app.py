@@ -58,75 +58,66 @@ sim_mode = st.sidebar.selectbox(
 
 if sim_mode == "🚀 3D Uzayda Seyahat (Interstellar Warp)":
     st.subheader("🪐 3D Derin Uzay Navigasyon Simülatörü")
-    st.write("Aşağıdaki 3D simülatörde fareyi sürükleyerek kamerayı döndürebilir, uzay boşluğundaki yıldız tarlasında seyahat edebilirsin!")
+    st.write("Aşağıdaki 3D simülatörde uzay boşluğundaki yıldız tarlasında canlı seyahat edebilirsin!")
     
-    # Three.js Tabanlı Canlı 3D Yıldız Tarlası & Seyahat Simülasyonu (HTML/JS)
-    threejs_code = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body { margin: 0; overflow: hidden; background-color: #000; }
-            canvas { display: block; width: 100vw; height: 500px; }
-            #info {
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                color: #00f0ff;
-                font-family: monospace;
-                font-size: 14px;
-                background: rgba(0,0,0,0.6);
-                padding: 8px 12px;
-                border-radius: 5px;
-                border: 1px solid #00f0ff;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="info">🚀 WARP HIZI: ACTIVE | Fare ile bakış açısını değiştirin</div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-        <script>
-            let scene, camera, renderer, stars, starGeo;
-            let count = 4000;
+    # HTML & Three.js 3D Yıldız Tarlası
+    html_3d = """
+    <div id="canvas-container" style="width:100%; height:500px; background:#000; border-radius:12px; overflow:hidden; position:relative;">
+        <div style="position:absolute; top:10px; left:10px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.7); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff;">
+            🚀 WARP HIZI: ACTIVE | 3D Space Flight Simulation
+        </div>
+        <canvas id="starCanvas"></canvas>
+    </div>
 
-            function init() {
-                scene = new THREE.Scene();
-                camera = new THREE.PerspectiveCamera(60, window.innerWidth / 500, 1, 1000);
-                camera.position.z = 1;
-                camera.rotation.x = Math.PI/2;
+    <script>
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
 
-                renderer = new THREE.WebGLRenderer();
-                renderer.setSize(window.innerWidth, 500);
-                document.body.appendChild(renderer.domElement);
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 500;
+        }
+        resize();
 
-                starGeo = new THREE.BufferGeometry();
-                let positions = new Float32Array(count * 3);
+        const numStars = 800;
+        const stars = [];
 
-                for(let i=0; i<count*3; i+=3) {
-                    positions[i] = Math.random() * 600 - 300;
-                    positions[i+1] = Math.random() * 600 - 300;
-                    positions[i+2] = Math.random() * 600 - 300;
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: (Math.random() - 0.5) * canvas.width,
+                y: (Math.random() - 0.5) * canvas.height,
+                z: Math.random() * canvas.width,
+                o: '0.' + Math.floor(Math.random() * 99) + 1
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle = "rgba(3, 5, 12, 0.2)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            for (let i = 0; i < numStars; i++) {
+                let star = stars[i];
+                star.z -= 4;
+
+                if (star.z <= 0) {
+                    star.z = canvas.width;
+                    star.x = (Math.random() - 0.5) * canvas.width;
+                    star.y = (Math.random() - 0.5) * canvas.height;
                 }
 
-                starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                let k = 128.0 / star.z;
+                let px = star.x * k + cx;
+                let py = star.y * k + cy;
 
-                let sprite = new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png');
-                let starMaterial = new THREE.PointsMaterial({
-                    color: 0x38bdf8,
-                    size: 0.8,
-                    transparent: true
-                });
-
-                stars = new THREE.Points(starGeo, starMaterial);
-                scene.add(stars);
-
-                window.addEventListener("resize", onWindowResize, false);
-                animate();
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    let size = (1 - star.z / canvas.width) * 2.5;
+                    ctx.beginPath();
+                    ctx.fillStyle = "#38bdf8";
+                    ctx.arc(px, py, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
-
-            function onWindowResize() {
-                camera.aspect = window.innerWidth / 500;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, 500);
-            }
-
+            requestAnimationFrame(draw);
