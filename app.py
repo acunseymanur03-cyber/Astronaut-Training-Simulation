@@ -56,7 +56,6 @@ if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen, Uydular & Yıldızlar":
             }});
         }}
         
-        // Güneş, 8 Gezegen, Cüce Gezegen ve Önemli Uydular
         let bodies = [
             {{ x: -350, y: 0, r: 45, name: '☀️ Güneş (Yıldız)', z: 600, color1: '#ffcc00', color2: '#ff3300', ring: false }},
             {{ x: -280, y: -40, r: 10, name: '☿ Merkür', z: 580, color1: '#b0b0b0', color2: '#505050', ring: false }},
@@ -76,7 +75,6 @@ if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen, Uydular & Yıldızlar":
             let cx = canvas.width / 2;
             let cy = canvas.height / 2;
             
-            // Yıldızlar (Hıza duyarlı)
             for(let i=0; i<stars.length; i++) {{
                 let s = stars[i];
                 s.Z -= (speed * 0.5);
@@ -93,7 +91,6 @@ if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen, Uydular & Yıldızlar":
                 }}
             }}
 
-            // Gök Cisimleri
             for(let j=0; j<bodies.length; j++) {{
                 let b = bodies[j];
                 b.z -= (speed * 0.25);
@@ -116,46 +113,4 @@ if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen, Uydular & Yıldızlar":
                     ctx.restore();
                 }}
 
-                let grad = ctx.createRadialGradient(bpx - br*0.3, bpy - br*0.3, br*0.1, bpx, bpy, br);
-                grad.addColorStop(0, b.color1);
-                grad.addColorStop(1, b.color2);
-                
-                ctx.beginPath();
-                ctx.arc(bpx, bpy, br, 0, Math.PI * 2);
-                ctx.fillStyle = grad;
-                ctx.shadowBlur = 20;
-                ctx.shadowColor = b.color1;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                ctx.fillStyle = "#f1f5f9";
-                ctx.font = "bold 11px monospace";
-                ctx.fillText(b.name, bpx + br + 8, bpy + 4);
-            }}
-
-            requestAnimationFrame(draw);
-        }}
-        draw();
-    </script>
-    """
-    components.html(sol_html, height=560)
-    st.success(f"🌌 Güneş Sistemi simülasyonu aktif. Hız faktörü: **{speed_factor}x**")
-
-elif sim_mode == "🚀 Gerçek Fiziksel Roket Fırlatma Simülatörü":
-    st.subheader("🚀 Fizik Tabanlı Canlı Roket Fırlatma & Yörünge Motoru")
-    st.write("Roketin itki kuvvetini (Throttle) ayarlayarak atmosferi aşın, yerçekimi ve hız değişimlerini anlık takip edin!")
-    
-    col_r1, col_r2 = st.columns(2)
-    with col_r1:
-        throttle = st.slider("Motor İtki Gücü (Throttle %)", 0, 100, 85)
-        payload_weight = st.selectbox("Yük (Payload)", ["Standart Uydu (500 kg)", "Derin Uzay Sondayı (1200 kg)", "Astronot Kapsülü (2500 kg)"])
-    withcol_r2:
-        st.info("📊 **Fizik Parametreleri:**\n- Yerçekimi İvmesi: 9.81 m/s²\n- Atmosferik Direnç: Aktif\n- Yakıt Tüketim Oranı: İtkiyle Orantılı")
-    
-    if st.button("🔥 Ateşle ve Fırlat!"):
-        with st.spinner("Geri sayım başlatıldı... 3, 2, 1, Liftoff! 🚀"):
-            time.sleep(2)
-        
-        # Fizik simülasyon sonuçları
-        max_altitude = throttle * 12.5  # km
-        max_speed = throttle * 340      
+                let grad = ctx.createRadialGradient(bpx - br*0.3, bpy - br*0.3, br*0.1, bpx,
