@@ -19,8 +19,8 @@ sim_mode = st.sidebar.selectbox("Simülasyon Modu Seçin", [
     "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)",
     "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü",
     "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör",
-    "☄️ 3D Uzay Çöpü & Radar Kaçınma Simülatörü",
-    "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)"
+    "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)",
+    "☄️ 3D Uzay Çöpü & Radar Kaçınma Simülatörü"
 ])
 
 if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)":
@@ -29,7 +29,7 @@ if sim_mode == "🪐 Güneş Sistemi, 8 Gezegen & Uydular (3D)":
     
     sol_html = "<div style='width:100%; height:550px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'><div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>☀️ 3D GÜNEŞ SİSTEMİ & UYDULAR</div><canvas id='scs' style='width:100%; height:100%; display:block;'></canvas></div><script>const canvas = document.getElementById('scs'); const ctx = canvas.getContext('2d'); function resize() { canvas.width = canvas.parentElement.clientWidth; canvas.height = 550; } resize(); window.onresize = resize; let stars = []; for(let i=0; i<900; i++) { stars.push({ x: (Math.random()-0.5)*canvas.width, y: (Math.random()-0.5)*canvas.height, z: Math.random()*canvas.width }); } let bodies = [ { x: -380, y: 0, r: 50, name: '☀️ Güneş', z: 650, c1: '#ffcc00', c2: '#ff3300', ring: false }, { x: -300, y: -45, r: 10, name: '☿ Merkür', z: 600, c1: '#b0b0b0', c2: '#505050', ring: false }, { x: -220, y: 55, r: 16, name: '♀ Venüs', z: 560, c1: '#e3bb76', c2: '#8c6724', ring: false }, { x: -140, y: -25, r: 19, name: '🜨 Dünya (+Ay)', z: 520, c1: '#38bdf8', c2: '#1d4ed8', ring: false }, { x: -60, y: 65, r: 14, name: '♂ Mars (+Phobos)', z: 480, c1: '#ff7b54', c2: '#933215', ring: false }, { x: 30, y: -55, r: 35, name: '♃ Jüpiter (+Europa)', z: 430, c1: '#e0ae6f', c2: '#8b5a2b', ring: false }, { x: 120, y: 45, r: 30, name: '♄ Saturn (+Titan & Halka)', z: 380, c1: '#fcd34d', c2: '#b45309', ring: true }, { x: 200, y: -35, r: 23, name: '♅ Uranüs', z: 330, c1: '#67e8f9', c2: '#0e7490', ring: false }, { x: 280, y: 45, r: 22, name: '♆ Neptün', z: 290, c1: '#3b82f6', c2: '#1e3a8a', ring: false }, { x: 350, y: -25, r: 8, name: '♇ Plüton', z: 250, c1: '#d1d5db', c2: '#4b5563', ring: false } ]; function draw() { ctx.fillStyle = 'rgba(3, 5, 12, 0.45)'; ctx.fillRect(0, 0, canvas.width, canvas.height); let cx = canvas.width / 2, cy = canvas.height / 2; for(let i=0; i<stars.length; i++) { let s = stars[i]; s.Z -= 2.5; if(s.Z <= 0) { s.Z = canvas.width; s.X = (Math.random()-0.5)*canvas.width; s.Y = (Math.random()-0.5)*canvas.height; } let k = 100.0 / s.Z, px = s.X * k + cx, py = s.Y * k + cy; if(px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) { ctx.fillStyle = '#fff'; ctx.fillRect(px, py, 1.8, 1.8); } } for(let j=0; j<bodies.length; j++) { let b = bodies[j]; b.z -= 1.2; if(b.z <= 20) b.z = 950; let bk = 160.0 / b.z, bpx = b.x * bk + cx, bpy = b.y * bk + cy, br = b.r * bk; if(br < 0) continue; if(b.ring) { ctx.save(); ctx.beginPath(); ctx.ellipse(bpx, bpy, br * 2.2, br * 0.7, Math.PI / 6, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(245, 158, 11, 0.8)'; ctx.lineWidth = br * 0.28; ctx.stroke(); ctx.restore(); } let grad = ctx.createRadialGradient(bpx - br*0.3, bpy - br*0.3, br*0.1, bpx, bpy, br); grad.addColorStop(0, b.c1); grad.addColorStop(1, b.c2); ctx.beginPath(); ctx.arc(bpx, bpy, br, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill(); ctx.fillStyle = '#f1f5f9'; ctx.font = 'bold 12px monospace'; ctx.fillText(b.name, bpx + br + 10, bpy + 4); } requestAnimationFrame(draw); } draw();</script>"
     components.html(sol_html, height=570)
-    
+
 elif sim_mode == "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü":
     st.subheader("🚀 Profesyonel 3D Roket Fırlatma & Atmosfer Tırmanış Simülatörü")
     throttle = st.slider("Motor İtki Gücü (Throttle %)", 0, 100, 90)
@@ -40,6 +40,7 @@ elif sim_mode == "🚀 Gerçekçi 3D Roket Fırlatma & Yörünge Simülatörü":
     if st.button("🔥 Tam Güç Ateşleme Yap"):
         st.success("🚀 Roket başarıyla fırlatıldı ve atmosfer katmanını geçti! İrtifa: 320 km.")
         st.balloons()
+
 elif sim_mode == "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör":
     st.subheader("📊 3D Kalp Ritmi (EKG) & Biyometrik Canlı Akış Monitörü")
     
@@ -50,24 +51,14 @@ elif sim_mode == "🌐 3D Canlı Kokpit & EKG Biyometrik Monitör":
     c1.markdown('<div class="metric-card"><h3>❤️ Kalp Ritmi</h3><h2>74 bpm</h2></div>', unsafe_allow_html=True)
     c2.markdown('<div class="metric-card"><h3>🧪 Kabin Oksijeni</h3><h2>99.7%</h2></div>', unsafe_allow_html=True)
     c3.markdown('<div class="metric-card"><h3>🧠 Nöro-Stres</h3><h2>%10 (Stabil)</h2></div>', unsafe_allow_html=True)
-else:
-    st.subheader("☄️ 3D Uzay Çöpü Radar & Kaçınma Simülatörü")
-    
-    radar_html = "<div style='width:100%; height:480px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'><div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>📡 RADAR TARAMA: AKTİF</div><canvas id='rcan' style='width:100%; height:100%; display:block;'></canvas></div><script>const rcan = document.getElementById('rcan'); const rctx2 = rcan.getContext('2d'); function rres() { rcan.width = rcan.parentElement.clientWidth; rcan.height = 480; } rres(); window.onresize = rres; let angle = 0; let debris = [ {x: 140, y: -90}, {x: -160, y: 110}, {x: 60, y: 150} ]; function drawRadar() { rctx2.fillStyle = 'rgba(3, 5, 12, 0.25)'; rctx2.fillRect(0, 0, rcan.width, rcan.height); let cx = rcan.width / 2, cy = rcan.height / 2; rctx2.strokeStyle = 'rgba(56, 189, 248, 0.35)'; rctx2.lineWidth = 1.5; [70, 140, 210].forEach(r => { rctx2.beginPath(); rctx2.arc(cx, cy, r, 0, Math.PI*2); rctx2.stroke(); }); angle += 0.035; rctx2.save(); rctx2.translate(cx, cy); rctx2.rotate(angle); let grad = rctx2.createLinearGradient(0, 0, 210, 0); grad.addColorStop(0, 'rgba(56, 189, 248, 0.85)'); grad.addColorStop(1, 'transparent'); rctx2.fillStyle = grad; rctx2.beginPath(); rctx2.moveTo(0,0); rctx2.arc(0,0, 210, 0, 0.5); rctx2.lineTo(0,0); rctx2.fill(); rctx2.restore(); debris.forEach(d => { rctx2.fillStyle = '#ef4444'; rctx2.shadowBlur = 15; rctx2.shadowColor = '#ef4444'; rctx2.beginPath(); rctx2.arc(cx + d.x, cy + d.y, 6, 0, Math.PI*2); rctx2.fill(); rctx2.shadowBlur = 0; }); requestAnimationFrame(drawRadar); } drawRadar();</script>"
-    components.html(radar_html, height=500)
-    
-    if st.button("🚨 Otonom Kaçış Manevrasını Başlat"):
-        st.balloons()
-        st.success("🎉 Başarılı! RDP itki roketleri devreye girerek uzay çöplerinden kaçındı.")
+
 elif sim_mode == "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)":
     st.subheader("🏅 NASA Astronot Uzmanlık Eğitimi & Rozet Kazanma Simülatörü")
     st.write("Görev simülasyonlarını başarıyla tamamlayarak resmi NASA astronot uzmanlık rozetlerini kazanın!")
 
-    # Rozet Durumu Saklama (Session State)
     if "badges" not in st.session_state:
         st.session_state.badges = {"zero_g": False, "eva": False, "nav": False}
 
-    # 3D Eğitim Kapsülü Görsel Simülasyonu
     train_html = "<div style='width:100%; height:380px; background:#000; border-radius:12px; overflow:hidden; position:relative; border:2px solid #38bdf8;'><div style='position:absolute; top:12px; left:12px; color:#00f0ff; font-family:monospace; background:rgba(0,0,0,0.85); padding:8px 12px; border-radius:6px; border:1px solid #00f0ff; z-index:10; font-size:13px;'>🧑‍🚀 NASA EĞİTİM KAPSÜLÜ | Canlı Yerçekimsizlik Testi</div><canvas id='tcan' style='width:100%; height:100%; display:block;'></canvas></div><script>const tcan = document.getElementById('tcan'); const tctx = tcan.getContext('2d'); function tres() { tcan.width = tcan.parentElement.clientWidth; tcan.height = 380; } tres(); window.onresize = tres; let aY = 190; let dir = 1; function drawTrain() { tctx.fillStyle = 'rgba(3, 5, 12, 0.3)'; tctx.fillRect(0, 0, tcan.width, tcan.height); let cx = tcan.width / 2; aY += 0.8 * dir; if (aY > 230 || aY < 150) dir *= -1; tctx.fillStyle = '#38bdf8'; tctx.shadowBlur = 15; tctx.shadowColor = '#38bdf8'; tctx.beginPath(); tctx.arc(cx, aY - 30, 18, 0, Math.PI * 2); tctx.fill(); tctx.fillStyle = '#f8fafc'; tctx.beginPath(); tctx.roundRect(cx - 15, aY - 8, 30, 45, 8); tctx.fill(); tctx.fillStyle = '#ef4444'; tctx.fillRect(cx - 22, aY, 7, 25); tctx.fillRect(cx + 15, aY, 7, 25); tctx.strokeStyle = '#00f0ff'; tctx.lineWidth = 2; [40, 80, 120].forEach(r => { tctx.beginPath(); tctx.arc(cx, aY, r + Math.sin(Date.now() * 0.003) * 5, 0, Math.PI * 2); tctx.stroke(); }); requestAnimationFrame(drawTrain); } drawTrain();</script>"
     components.html(train_html, height=400)
 
@@ -108,19 +99,4 @@ elif sim_mode == "🏅 NASA Astronot Eğitim & Rozet Merkezi (3D)":
     b_col1, b_col2, b_col3 = st.columns(3)
     
     with b_col1:
-        if st.session_state.badges["zero_g"]:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🛸</h1><b>NASA Zero-G Master</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA Zero-G Master</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
-
-    with b_col2:
-        if st.session_state.badges["eva"]:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>👨‍🚀</h1><b>NASA EVA Specialist</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>NASA EVA Specialist</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
-
-    with b_col3:
-        if st.session_state.badges["nav"]:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(56,189,248,0.2); border:2px solid #38bdf8; border-radius:12px;'><h1>🚀</h1><b>Deep Space Commander</b><br><small style='color:#4ade80;'>Kazanıldı ✅</small></div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='text-align:center; padding:15px; background:rgba(255,255,255,0.05); border:1px dashed #64748b; border-radius:12px;'><h1>🔒</h1><b>Deep Space Commander</b><br><small style='color:#94a3b8;'>Kilitli</small></div>", unsafe_allow_html=True)
+        if
