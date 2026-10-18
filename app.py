@@ -1,66 +1,104 @@
 import streamlit as st
 import time
+import random
 
 # Sayfa Yapılandırması
 st.set_page_config(
-    page_title="Astronaut Training Simulation",
+    page_title="Astronaut Training Simulation - 3D Neural Suite",
     page_icon="🚀",
     layout="wide"
 )
 
-st.title("🚀 Astronaut Training & Cognitive Stress Simulator")
-st.markdown("### NASA Space Apps Challenge - Adaptive Mission Control Suite")
+# Özel CSS ile Gece/Uzay Teması ve Neon Efektleri
+st.markdown("""
+    <style>
+    .stApp {
+        background: radial-gradient(circle at center, #0B1021 0%, #03050C 100%);
+        color: #E2E8F0;
+    }
+    .metric-card {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        text-align: center;
+    }
+    .stButton>button {
+        background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+    }
+    .stButton>button:hover {
+        background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# Kenar Çubuğu (Sidebar) - Eğitim Modları
-st.sidebar.header("🎛️ Simülasyon Kontrol Paneli")
+# Başlık ve 3D Hissiyatı Veren Görsel Banner
+st.title("🌌 NEURO-AURA: 3D Astronaut Cognitive Training Suite")
+st.markdown("### *NASA Space Apps Challenge - Advanced Zero-G & Stress Simulation Engine*")
+
+# Yan Menü
+st.sidebar.header("🕹️ Simülasyon Kontrol Paneli")
 sim_mode = st.sidebar.selectbox(
-    "Eğitim Modunu Seçin",
+    "Mod Seçimi",
     [
-        "Genel Durum & Biyometrik Takip",
-        "Kritik Oksijen & Yaşam Destek",
-        "Bilişsel Reaksiyon & Stres Testi"
+        "🚀 3D Kokpit & Biyometrik Takip",
+        "⚖️ Yerçekimsiz Ortam (Zero-G) Denge Simülasyonu",
+        "🚨 Acil Durum & Kriz Yönetim Simülatörü"
     ]
 )
 
-if sim_mode == "Genel Durum & Biyometrik Takip":
-    st.subheader("📊 Anlık Astronot Biyometrik Paneli")
+if sim_mode == "🚀 3D Kokpit & Biyometrik Takip":
+    st.subheader("🌐 Canlı Uzay İstasyonu & Biyometrik Veri Akışı")
+    
+    # 3D Uzay Görseli Efekti
+    st.image(
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop",
+        caption="NASA Uzay İstasyonu Canlı Yörünge Görünümü",
+        use_container_width=True
+    )
+    
     col1, col2, col3 = st.columns(3)
-    
     with col1:
-        st.metric(label="Kalp Atış Hızı (HR)", value="78 bpm", delta="-2 bpm")
+        st.markdown('<div class="metric-card"><h3>❤️ Kalp Atış Hızı</h3><h2>74 bpm</h2><p style="color:#38bdf8;">Optimum Seviye</p></div>', unsafe_allow_html=True)
     with col2:
-        st.metric(label="Kabin İçi Oksijen", value="98.2%", delta="+0.4%")
+        st.markdown('<div class="metric-card"><h3>🧪 Kabin Oksijeni</h3><h2>99.4%</h2><p style="color:#4ade80;">Stabil Basınç</p></div>', unsafe_allow_html=True)
     with col3:
-        st.metric(label="Bilişsel Stres Seviyesi", value="Düşük (Optimum)", delta="-5%")
-        
-    st.info("💡 Sistemler stabil çalışıyor. Astronot adayı göreve tamamen hazır.")
+        st.markdown('<div class="metric-card"><h3>🧠 Bilişsel Yük</h3><h2>Düşük</h2><p style="color:#38bdf8;">Odak %98</p></div>', unsafe_allow_html=True)
 
-elif sim_mode == "Kritik Oksijen & Yaşam Destek":
-    st.subheader("🧪 Yaşam Destek Ünitesi Simülasyonu")
-    oxygen_slider = st.slider("Oksijen Basınç Simülasyonu (%)", 0, 100, 90)
+elif sim_mode == "⚖️ Yerçekimsiz Ortam (Zero-G) Denge Simülasyonu":
+    st.subheader("⚖️ Yerçekimsiz Ortamda Denge ve Oryantasyon Testi")
+    st.write("Uzay boşluğunda yön bulma yeteneğini test eden 3D simülasyon motorunu çalıştırın.")
     
-    if oxygen_slider < 40:
-        st.error("🚨 KRİTİK ALARM: Oksijen seviyesi tehlikeli sınırın altında! Acil maske protokolü devreye giriyor.")
-    elif oxygen_slider < 70:
-        st.warning("⚠️ UYARI: Oksijen oranında düşüş gözleniyor. Filtreleri kontrol edin.")
-    else:
-        st.success("✅ Yaşam destek sistemleri nominal düzeyde.")
+    gravity_level = st.slider("Simüle Edilen Yerçekimi Katsayısı (G)", 0.0, 1.0, 0.05)
+    
+    if st.button("🔄 3D Denge Kalibrasyonunu Başlat"):
+        with st.spinner("Nöral ağlar ve jiroskopik sensörler kalibre ediliyor..."):
+            time.sleep(2.5)
+        st.success(f"✅ Kalibrasyon Başarılı! {gravity_level}G seviyesinde uzay yürüyüşü dengesi sağlandı.")
+        st.balloons()
 
 else:
-    st.subheader("🧠 Bilişsel Reaksiyon & Acil Durum Kriz Testi")
-    st.write("Senaryo: Görev sırasında ani basınç kaybı ve ana bilgisayar arızası algılandı.")
+    st.subheader("🚨 Acil Durum & Kriz Yönetim Simülatörü")
+    st.write("Senaryo: Güneş fırtınası kaynaklı radyoaktif dalgalanma ve ana panel arızası!")
     
-    decision = st.radio(
-        "İlk hamle olarak ne yapmalısın?",
+    crisis_action = st.radio(
+        "Acil Durum Stratejisini Seçin:",
         [
-            "Yedek jeneratörü devreye sokup ana vanayı kapat",
-            "Merkezi yapay zeka asistanına bağlanarak otomatik yama iste",
-            "Kilitli tahliye bölmesine geçiş yap"
+            "Kalkanları aktifleştir ve acil sığınma bölmesine geç",
+            "Yapay zeka (Lidya) destekli otomatik onarım protokolünü çalıştır",
+            "Manuel oksijen regülasyonunu devreye sok"
         ]
     )
     
-    if st.button("Kararı Test Et"):
-        with st.spinner("Simülasyon sonuçları analiz ediliyor..."):
+    if st.button("⚡ Krizi Yönet"):
+        with st.spinner("Kriz senaryosu simüle ediliyor..."):
             time.sleep(2)
-        st.balloons()
-        st.success(f"Seçilen strateji başarıyla uygulandı: **{decision}**. Görev güvenle sürdürülüyor!")
+        st.error("⚠️ Simülasyon Sonucu: Sinyal bozulması önlendi, rota güvenli bölgeye sabitlendi!")
